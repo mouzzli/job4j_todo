@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class DataSourceConfig {
-
     @Bean(destroyMethod = "close")
     public SessionFactory sf() {
         final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
