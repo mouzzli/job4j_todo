@@ -21,13 +21,15 @@ public class HibernateTaskRepository implements TaskRepository {
     @Override
     public Task create(Task task) {
         var session = sessionFactory.openSession();
-        try (session) {
+        try {
             session.beginTransaction();
             session.save(task);
             session.getTransaction().commit();
         } catch (Exception e) {
             session.getTransaction().rollback();
             throw e;
+        } finally {
+            session.close();
         }
         return task;
     }
@@ -36,7 +38,7 @@ public class HibernateTaskRepository implements TaskRepository {
     public boolean update(Task task) {
         boolean result;
         var session = sessionFactory.openSession();
-        try (session) {
+        try {
             session.beginTransaction();
             result = session.createQuery(UPDATE)
                     .setParameter("description", task.getDescription())
@@ -47,6 +49,8 @@ public class HibernateTaskRepository implements TaskRepository {
         } catch (Exception e) {
             session.getTransaction().rollback();
             throw e;
+        } finally {
+            session.close();
         }
         return result;
     }
@@ -55,7 +59,7 @@ public class HibernateTaskRepository implements TaskRepository {
     public boolean deleteById(int taskId) {
         boolean result;
         var session = sessionFactory.openSession();
-        try (session) {
+        try {
             session.beginTransaction();
             result = session.createQuery(DELETE_BY_ID)
                     .setParameter("id", taskId)
@@ -64,6 +68,8 @@ public class HibernateTaskRepository implements TaskRepository {
         } catch (Exception e) {
             session.getTransaction().rollback();
             throw e;
+        } finally {
+            session.close();
         }
         return result;
     }
@@ -72,14 +78,10 @@ public class HibernateTaskRepository implements TaskRepository {
     public List<Task> findAllOrderByDate() {
         List<Task> result;
         var session = sessionFactory.openSession();
-        try (session) {
-            session.beginTransaction();
-            result = session.createQuery(FIND_ALL, Task.class).list();
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            session.getTransaction().rollback();
-            throw e;
-        }
+        session.beginTransaction();
+        result = session.createQuery(FIND_ALL, Task.class).list();
+        session.getTransaction().commit();
+        session.close();
         return result;
     }
 
@@ -97,7 +99,7 @@ public class HibernateTaskRepository implements TaskRepository {
     public boolean setDone(int id) {
         boolean result;
         var session = sessionFactory.openSession();
-        try (session) {
+        try {
             session.beginTransaction();
             result = session.createQuery(SET_DONE)
                     .setParameter("done", true)
@@ -107,6 +109,8 @@ public class HibernateTaskRepository implements TaskRepository {
         } catch (Exception e) {
             session.getTransaction().rollback();
             throw e;
+        } finally {
+            session.close();
         }
         return result;
     }
@@ -115,15 +119,11 @@ public class HibernateTaskRepository implements TaskRepository {
     public List<Task> findByStatus(boolean status) {
         List<Task> result;
         var session = sessionFactory.openSession();
-        try (session) {
-            session.beginTransaction();
-            result = session.createQuery(FIND_DONE, Task.class)
-                    .setParameter("done", status).list();
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            session.getTransaction().rollback();
-            throw e;
-        }
+        session.beginTransaction();
+        result = session.createQuery(FIND_DONE, Task.class)
+                .setParameter("done", status).list();
+        session.getTransaction().commit();
+        session.close();
         return result;
     }
 }
