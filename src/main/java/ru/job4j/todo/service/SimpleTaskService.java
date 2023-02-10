@@ -6,7 +6,7 @@ import ru.job4j.todo.model.Task;
 import ru.job4j.todo.repository.TaskRepository;
 
 import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -24,33 +24,23 @@ public class SimpleTaskService implements TaskService {
     }
 
     @Override
-    public Task findById(int id) {
-        var optionalTask = taskRepository.findById(id);
-        if (optionalTask.isEmpty()) {
-            throw new NoSuchElementException(String.format("Задачи с id = %s не сушествует", id));
-        }
-        return optionalTask.get();
+    public Optional<Task> findById(int id) {
+        return taskRepository.findById(id);
     }
 
     @Override
-    public void setDone(int id) {
-        if (!taskRepository.setDone(id)) {
-            throw new NoSuchElementException(String.format("Невозможно завершить задачу. id = %s не сушествует", id));
-        }
+    public boolean setDone(int id) {
+        return taskRepository.setDone(id);
     }
 
     @Override
-    public void deleteById(int id) {
-        if (!taskRepository.deleteById(id)) {
-            throw new NoSuchElementException(String.format("Невозможно удалить задачу. id = %s не существует", id));
-        }
+    public boolean deleteById(int id) {
+        return taskRepository.deleteById(id);
     }
 
     @Override
-    public void update(Task task) {
-        if (!taskRepository.update(task)) {
-            throw new NoSuchElementException(String.format("Невозможно обновить задачу. id = %s не существует", task.getId()));
-        }
+    public boolean update(Task task) {
+        return taskRepository.update(task);
     }
 
     @Override

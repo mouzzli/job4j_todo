@@ -14,8 +14,8 @@ public class HibernateTaskRepository implements TaskRepository {
     private static final String SET_DONE = "UPDATE Task SET done = :done WHERE id = :id";
     private static final String DELETE_BY_ID = "DELETE FROM Task WHERE id = :id";
     private static final String UPDATE = "UPDATE Task SET description = :description, done = :done WHERE id = :id";
-    private static final String FIND_DONE = "FROM Task WHERE done = :done ORDER BY created";
-    private static final String FIND_ALL = "FROM Task ORDER BY created";
+    private static final String FIND_DONE = "FROM Task WHERE done = :done ORDER BY id";
+    private static final String FIND_ALL = "FROM Task ORDER BY id";
     private final SessionFactory sessionFactory;
 
     @Override

@@ -7,89 +7,91 @@ import org.springframework.web.bind.annotation.*;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.service.TaskService;
 
-import java.util.NoSuchElementException;
-
 @Controller
 @AllArgsConstructor
+@RequestMapping("/tasks")
 public class TaskController {
     private final TaskService taskService;
 
-    @GetMapping({"/", "/tasks"})
+    @GetMapping()
     public String index(Model model) {
         model.addAttribute("tasks", taskService.findAll());
-        return "tasks";
+        return "task/tasks";
     }
 
-    @GetMapping("/completedTasks")
+    @GetMapping("/completed")
     public String completedTask(Model model) {
         model.addAttribute("tasks", taskService.findByStatus(true));
-        return "completedTasks";
+        return "task/completed";
     }
 
-    @GetMapping("/newTasks")
+    @GetMapping("/new")
     public String newTask(Model model) {
         model.addAttribute("tasks", taskService.findByStatus(false));
-        return "newTasks";
+        return "task/new";
     }
 
-    @GetMapping("/createTask")
+    @GetMapping("/create")
     public String getTaskForm() {
-        return "addTask";
+        return "task/add";
     }
 
-    @PostMapping("/createTask")
+    @PostMapping("/create")
     public String createTask(@ModelAttribute Task task) {
         taskService.create(task);
-        return "redirect:tasks";
+        return "redirect:/tasks";
     }
 
     @GetMapping("/task/{id}")
     public String getTask(@PathVariable int id, Model model) {
-        try {
-            model.addAttribute("task", taskService.findById(id));
-            return "task";
-        } catch (NoSuchElementException e) {
-            model.addAttribute("message", e.getMessage());
-            return "error";
+        var optionalTask = taskService.findById(id);
+        if (optionalTask.isPresent()) {
+            model.addAttribute("task", optionalTask.get());
+            return "task/task";
         }
+        model.addAttribute("message", String.format("Задачи с id = %s не сушествует", id));
+        return "error/error";
     }
 
-    @PostMapping("/completeTask")
+    @PostMapping("/complete")
     public String completeTask(@RequestParam("id") int id, Model model) {
-        try {
-            taskService.setDone(id);
-            return "redirect:task/" + id;
-        } catch (NoSuchElementException e) {
-            model.addAttribute("message", e.getMessage());
-            return "error";
+        var isDone = taskService.setDone(id);
+        if (!isDone) {
+            model.addAttribute("message", String.format("Невозможно завершить задачу. id = %s не сушествует", id));
+            return "error/error";
         }
+
+        return "redirect:task/" + id;
     }
 
-    @PostMapping("/deleteTask")
+    @PostMapping("/delete")
     public String deleteTask(@RequestParam("id") int id, Model model) {
-        try {
-            taskService.deleteById(id);
-            return "redirect:tasks";
-        } catch (NoSuchElementException e) {
-            model.addAttribute("message", e.getMessage());
-            return "error";
+        var isDelete = taskService.deleteById(id);
+        if (!isDelete) {
+            model.addAttribute("message", String.format("Невозможно удалить задачу. id = %s не существует", id));
+            return "error/error";
         }
+        return "redirect:/tasks";
     }
 
-    @PostMapping("/updateTask")
+    @PostMapping("/update")
     public String updateTask(@ModelAttribute Task task, Model model) {
-        try {
-            taskService.update(task);
-            return "redirect:task/" + task.getId();
-        } catch (NoSuchElementException e) {
-            model.addAttribute("message", e.getMessage());
-            return "error";
+        var isUpdate = taskService.update(task);
+        if (!isUpdate) {
+            model.addAttribute("message", String.format("Невозможно обновить задачу. id = %s не существует", task.getId()));
+            return "error/error";
         }
+        return "redirect:task/" + task.getId();
     }
 
-    @GetMapping("/editTask/{id}")
+    @GetMapping("/edit/{id}")
     public String getEditTaskForm(@PathVariable int id, Model model) {
-        model.addAttribute("task", taskService.findById(id));
-        return "edit";
+        var optionalTask = taskService.findById(id);
+        if (optionalTask.isPresent()) {
+            model.addAttribute("task", optionalTask.get());
+            return "task/edit";
+        }
+        model.addAttribute("message", String.format("Задачи с id = %s не сушествует", id));
+        return "error/error";
     }
 }

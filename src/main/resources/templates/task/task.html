@@ -41,7 +41,7 @@
 <div class="container-fluid p-0">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="/">TODO</a>
+            <a class="navbar-brand" th:href="@{/tasks}">TODO</a>
             <div class="collapse navbar-collapse">
                 <div class="navbar-nav">
                     <a class="nav-item nav-link active" th:href="@{/tasks}">Задачи</a>
@@ -52,12 +52,12 @@
 </div>
 <div class="container mt-3">
        <div class="btn-group">
-           <form method="post" th:action="@{/completeTask}" enctype="multipart/form-data">
+           <form method="post" th:action="@{/tasks/complete}" enctype="multipart/form-data">
                <input type="hidden" name="id" th:value="${task.id}">
                <button type="submit" class="btn btn-outline-warning first">Выполнено</button>
            </form>
-           <a type="button" class="btn btn-outline-warning center" th:href="@{|/editTask/${task.id}|}">Отредактировать</a>
-           <form method="post" th:action="@{/deleteTask}" enctype="multipart/form-data">
+           <a type="button" class="btn btn-outline-warning center" th:href="@{|/tasks/edit/${task.id}|}">Отредактировать</a>
+           <form method="post" th:action="@{/tasks/delete}" enctype="multipart/form-data">
                <input type="hidden" name="id" th:value="${task.id}">
                <button type="submit" class="btn btn-outline-warning end">Удалить</button>
            </form>

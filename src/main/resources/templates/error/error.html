@@ -22,13 +22,12 @@
     </script>
 
     <title>Список заданий</title>
-
 </head>
 <body>
 <div class="container-fluid p-0">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="/">TODO</a>
+            <a class="navbar-brand" th:href="@{/tasks}">TODO</a>
             <div class="collapse navbar-collapse">
                 <div class="navbar-nav">
                     <a class="nav-item nav-link active" th:href="@{/tasks}">Задачи</a>
@@ -36,31 +35,23 @@
             </div>
         </div>
     </nav>
-</div>
-<div class="container mt-3">
-    <div class="btn-group" role="group">
-        <a type="button" class="btn btn-outline-warning" th:href="@{/createTask}">Добавить Задачу</a>
-        <a type="button" class="btn btn-outline-warning" th:href="@{/tasks}">Все</a>
-        <a type="button" class="btn btn-outline-warning active" href="#">Выполненные</a>
-        <a type="button" class="btn btn-outline-warning" th:href="@{/newTasks}">Новые</a>
+
+    <div class="container">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">
+                    <b>Ошибка:</b>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="table-danger">
+                <td th:text="${message}"></td>
+            </tr>
+            </tbody>
+        </table>
     </div>
-    <table class="table">
-        <thead>
-        <tr>
-            <th scope="col">Описание</th>
-            <th scope="col">Дата создания</th>
-            <th scope="col">Статус</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="task: ${tasks}" th:class="${task.done} ? table-success : table-secondary">
-            <td><a th:text="${task.description}" th:href="@{|/task/${task.id}|}"></a></td>
-            <td th:text="${#temporals.format(task.created, 'dd-MM-yyyy HH:mm')}"></td>
-            <td th:if="${task.done}">Завершенно</td>
-            <td th:if="${!task.done}">В Процессе</td>
-        </tr>
-        </tbody>
-    </table>
 </div>
 </body>
 </html>
