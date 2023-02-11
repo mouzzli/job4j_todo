@@ -13,7 +13,7 @@ import ru.job4j.todo.service.TaskService;
 public class TaskController {
     private final TaskService taskService;
 
-    @GetMapping()
+    @GetMapping
     public String index(Model model) {
         model.addAttribute("tasks", taskService.findAll());
         return "task/tasks";
