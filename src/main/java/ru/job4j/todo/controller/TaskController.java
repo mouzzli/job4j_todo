@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.todo.model.Task;
+import ru.job4j.todo.model.User;
 import ru.job4j.todo.service.TaskService;
 
 @Controller
@@ -14,20 +15,20 @@ public class TaskController {
     private final TaskService taskService;
 
     @GetMapping
-    public String index(Model model) {
-        model.addAttribute("tasks", taskService.findAll());
+    public String index(Model model, @SessionAttribute User user) {
+        model.addAttribute("tasks", taskService.findAll(user.getId()));
         return "task/tasks";
     }
 
     @GetMapping("/completed")
-    public String completedTask(Model model) {
-        model.addAttribute("tasks", taskService.findByStatus(true));
+    public String completedTask(Model model, @SessionAttribute User user) {
+        model.addAttribute("tasks", taskService.findByStatus(true, user.getId()));
         return "task/completed";
     }
 
     @GetMapping("/new")
-    public String newTask(Model model) {
-        model.addAttribute("tasks", taskService.findByStatus(false));
+    public String newTask(Model model, @SessionAttribute User user) {
+        model.addAttribute("tasks", taskService.findByStatus(false, user.getId()));
         return "task/new";
     }
 
@@ -37,27 +38,28 @@ public class TaskController {
     }
 
     @PostMapping("/create")
-    public String createTask(@ModelAttribute Task task) {
+    public String createTask(@ModelAttribute Task task, @SessionAttribute User user) {
+        task.setUser(user);
         taskService.create(task);
         return "redirect:/tasks";
     }
 
     @GetMapping("/task/{id}")
-    public String getTask(@PathVariable int id, Model model) {
-        var optionalTask = taskService.findById(id);
+    public String getTask(@PathVariable int id, Model model, @SessionAttribute User user) {
+        var optionalTask = taskService.findById(id, user.getId());
         if (optionalTask.isPresent()) {
             model.addAttribute("task", optionalTask.get());
             return "task/task";
         }
-        model.addAttribute("message", String.format("Задачи с id = %s не сушествует", id));
+        model.addAttribute("message", String.format("Задача с id = %s не сушествует или принадлежит другому пользователю", id));
         return "error/error";
     }
 
     @PostMapping("/complete")
-    public String completeTask(@RequestParam("id") int id, Model model) {
-        var isDone = taskService.setDone(id);
+    public String completeTask(@RequestParam("id") int id, Model model, @SessionAttribute User user) {
+        var isDone = taskService.setDone(id, user.getId());
         if (!isDone) {
-            model.addAttribute("message", String.format("Невозможно завершить задачу. id = %s не сушествует", id));
+            model.addAttribute("message", String.format("Невозможно завершить задачу. id = %s не сушествует или принадлежит другому пользователю", id));
             return "error/error";
         }
 
@@ -65,33 +67,34 @@ public class TaskController {
     }
 
     @PostMapping("/delete")
-    public String deleteTask(@RequestParam("id") int id, Model model) {
-        var isDelete = taskService.deleteById(id);
+    public String deleteTask(@RequestParam("id") int id, Model model, @SessionAttribute User user) {
+        var isDelete = taskService.deleteById(id, user.getId());
         if (!isDelete) {
-            model.addAttribute("message", String.format("Невозможно удалить задачу. id = %s не существует", id));
+            model.addAttribute("message", String.format("Невозможно удалить задачу. id = %s не существует или принадлежит другому пользователю", id));
             return "error/error";
         }
         return "redirect:/tasks";
     }
 
     @PostMapping("/update")
-    public String updateTask(@ModelAttribute Task task, Model model) {
-        var isUpdate = taskService.update(task);
+    public String updateTask(@ModelAttribute Task task, Model model, @SessionAttribute User user) {
+        var isUpdate = taskService.update(task, user.getId());
         if (!isUpdate) {
-            model.addAttribute("message", String.format("Невозможно обновить задачу. id = %s не существует", task.getId()));
+            model.addAttribute("message", String.format("Невозможно обновить задачу. id = %s не существует или принадлежит другому пользователю", task.getId()));
             return "error/error";
         }
         return "redirect:task/" + task.getId();
     }
 
     @GetMapping("/edit/{id}")
-    public String getEditTaskForm(@PathVariable int id, Model model) {
-        var optionalTask = taskService.findById(id);
+    public String getEditTaskForm(@PathVariable int id, Model model, @SessionAttribute User user) {
+        var optionalTask = taskService.findById(id, user.getId());
         if (optionalTask.isPresent()) {
             model.addAttribute("task", optionalTask.get());
             return "task/edit";
         }
-        model.addAttribute("message", String.format("Задачи с id = %s не сушествует", id));
+        model.addAttribute("message", String.format("Задача с id = %s не сушествует или принадлежит другому пользовтелю ", id));
         return "error/error";
     }
+
 }

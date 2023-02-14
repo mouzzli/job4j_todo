@@ -8,15 +8,15 @@ import java.util.Optional;
 public interface TaskRepository {
     Task create(Task task);
 
-    boolean update(Task task);
+    boolean update(Task task, int userId);
 
-    boolean deleteById(int taskId);
+    boolean deleteById(int taskId, int userId);
 
-    List<Task> findAllOrderByDate();
+    List<Task> findAllOrderByDate(int userId);
 
-    Optional<Task> findById(int taskId);
+    Optional<Task> findById(int taskId, int userId);
 
-    boolean setDone(int id);
+    boolean setDone(int id, int userId);
 
-    List<Task> findByStatus(boolean status);
+    List<Task> findByStatus(boolean status, int userId);
 }

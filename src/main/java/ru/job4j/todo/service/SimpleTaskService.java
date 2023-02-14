@@ -14,8 +14,8 @@ public class SimpleTaskService implements TaskService {
     private final TaskRepository taskRepository;
 
     @Override
-    public List<Task> findAll() {
-        return taskRepository.findAllOrderByDate();
+    public List<Task> findAll(int userId) {
+        return taskRepository.findAllOrderByDate(userId);
     }
 
     @Override
@@ -24,27 +24,27 @@ public class SimpleTaskService implements TaskService {
     }
 
     @Override
-    public Optional<Task> findById(int id) {
-        return taskRepository.findById(id);
+    public Optional<Task> findById(int id, int userId) {
+        return taskRepository.findById(id, userId);
     }
 
     @Override
-    public boolean setDone(int id) {
-        return taskRepository.setDone(id);
+    public boolean setDone(int id, int userId) {
+        return taskRepository.setDone(id, userId);
     }
 
     @Override
-    public boolean deleteById(int id) {
-        return taskRepository.deleteById(id);
+    public boolean deleteById(int id, int userId) {
+        return taskRepository.deleteById(id, userId);
     }
 
     @Override
-    public boolean update(Task task) {
-        return taskRepository.update(task);
+    public boolean update(Task task, int userId) {
+        return taskRepository.update(task, userId);
     }
 
     @Override
-    public List<Task> findByStatus(boolean status) {
-        return taskRepository.findByStatus(status);
+    public List<Task> findByStatus(boolean status, int userId) {
+        return taskRepository.findByStatus(status, userId);
     }
 }

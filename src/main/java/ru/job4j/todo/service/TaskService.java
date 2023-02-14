@@ -7,17 +7,17 @@ import java.util.Optional;
 
 public interface TaskService {
 
-    List<Task> findAll();
+    List<Task> findAll(int userId);
 
-    List<Task> findByStatus(boolean status);
+    List<Task> findByStatus(boolean status, int userId);
 
     Task create(Task task);
 
-    Optional<Task> findById(int id);
+    Optional<Task> findById(int id, int userId);
 
-    boolean setDone(int id);
+    boolean setDone(int id, int userId);
 
-    boolean deleteById(int id);
+    boolean deleteById(int id, int userId);
 
-    boolean update(Task task);
+    boolean update(Task task, int id);
 }
