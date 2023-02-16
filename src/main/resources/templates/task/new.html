@@ -60,6 +60,7 @@
         <tr>
             <th scope="col">Описание</th>
             <th scope="col">Дата создания</th>
+            <th scope="col">Приоритет</th>
             <th scope="col">Статус</th>
         </tr>
         </thead>
@@ -67,6 +68,7 @@
         <tr th:each="task: ${tasks}" th:class="${task.done} ? table-success : table-secondary">
             <td><a th:text="${task.description}" th:href="@{|/tasks/task/${task.id}|}"></a></td>
             <td th:text="${#temporals.format(task.created, 'dd-MM-yyyy HH:mm')}"></td>
+            <td th:text="${task.priority.name}"></td>
             <td th:if="${task.done}">Завершенно</td>
             <td th:if="${!task.done}">В Процессе</td>
         </tr>

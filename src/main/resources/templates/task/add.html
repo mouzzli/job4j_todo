@@ -47,6 +47,13 @@
             <label for="description" class="form-label"><b>Описание</b></label>
             <input type="text" class="form-control" id="description" name="description" placeholder="Опишите задачу" required="required">
         </div>
+        <div class="mb-3">
+            <label for="priority" class="form-label"><b>Приоритет</b></label>
+                <select class="form-control" id="priority" name="priority.id">
+                    <option th:each="priority : ${priorities}" th:value="${priority.id}"
+                            th:text="${priority.name}"></option>
+                </select>
+        </div>
         <button class="btn btn-outline-warning" type="submit">Создать</button>
         <a class="btn btn-outline-warning" th:href="@{/tasks}">Отмена</a>
     </form>

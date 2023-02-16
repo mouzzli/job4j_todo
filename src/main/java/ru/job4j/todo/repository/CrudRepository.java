@@ -62,6 +62,15 @@ public class CrudRepository {
         return tx(command);
     }
 
+    public <T> List<T> query(String query, Class<T> cl) {
+        Function<Session, List<T>> command = session -> {
+            var sq = session
+                    .createQuery(query, cl);
+            return sq.list();
+        };
+        return tx(command);
+    }
+
     public <T> T tx(Function<Session, T> command) {
         Session session = sf.openSession();
         Transaction tx = null;

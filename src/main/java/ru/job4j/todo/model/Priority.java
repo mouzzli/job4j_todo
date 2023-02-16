@@ -5,16 +5,15 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 
-@Data
 @Entity
-@Table(name = "todo_users")
+@Table(name = "priorities")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class User {
+@Data
+public class Priority {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     private int id;
     private String name;
-    private String login;
-    private String password;
+    private int position;
 }

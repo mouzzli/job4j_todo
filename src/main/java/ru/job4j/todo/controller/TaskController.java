@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.model.User;
+import ru.job4j.todo.service.PriorityService;
 import ru.job4j.todo.service.TaskService;
 
 @Controller
@@ -13,6 +14,7 @@ import ru.job4j.todo.service.TaskService;
 @RequestMapping("/tasks")
 public class TaskController {
     private final TaskService taskService;
+    private final PriorityService priorityService;
 
     @GetMapping
     public String index(Model model, @SessionAttribute User user) {
@@ -33,7 +35,8 @@ public class TaskController {
     }
 
     @GetMapping("/create")
-    public String getTaskForm() {
+    public String getTaskForm(Model model) {
+        model.addAttribute("priorities", priorityService.findAll());
         return "task/add";
     }
 
@@ -90,6 +93,7 @@ public class TaskController {
     public String getEditTaskForm(@PathVariable int id, Model model, @SessionAttribute User user) {
         var optionalTask = taskService.findById(id, user.getId());
         if (optionalTask.isPresent()) {
+            model.addAttribute("priorities", priorityService.findAll());
             model.addAttribute("task", optionalTask.get());
             return "task/edit";
         }
