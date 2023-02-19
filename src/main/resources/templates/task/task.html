@@ -79,6 +79,10 @@
             <p class="mb-1" th:text="'Описание задачи: ' + ${task.description}"></p>
             <p class="mb-1" th:text="'Дата создания: ' + ${#temporals.format(task.created, 'YYYY-MM-dd HH:mm')}"></p>
             <p class="mb-1" th:text="'Приоритет: ' + ${task.priority.name}"></p>
+            <p class="mb-1" >Категория:
+            <span th:each="category ,iterStat : ${task.categories}"
+                  th:text="${category.name} + ${!iterStat.last ? ', ' : ''}"></span>
+            </p>
             <div th:if="${task.done}" >
             <p class="mb-1">Статус задачи: Завершенно</p>
             </div>
