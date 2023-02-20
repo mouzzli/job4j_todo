@@ -10,7 +10,8 @@ import java.util.Optional;
 @Repository
 @AllArgsConstructor
 public class HibernateUserRepository implements UserRepository {
-    private static final String FIND_BY_LOGIN_AND_PASSWORD = "FROM User WHERE login = :login AND password = :password";
+    private static final String FIND_BY_LOGIN_AND_PASSWORD = "FROM User "
+            + "WHERE login = :login AND password = :password";
 
     private final CrudRepository crudRepository;
 

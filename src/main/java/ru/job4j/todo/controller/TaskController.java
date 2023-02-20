@@ -11,7 +11,7 @@ import ru.job4j.todo.service.CategoryService;
 import ru.job4j.todo.service.PriorityService;
 import ru.job4j.todo.service.TaskService;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
@@ -48,9 +48,9 @@ public class TaskController {
     }
 
     @PostMapping("/create")
-    public String createTask(@ModelAttribute Task task, @RequestParam(value = "category.id") int[] categories, @SessionAttribute User user) {
+    public String createTask(@ModelAttribute Task task, @RequestParam(value = "category.id") List<Integer> categories, @SessionAttribute User user) {
         task.setUser(user);
-        task.setCategories(Arrays.stream(categories).mapToObj(Category::new).collect(Collectors.toList()));
+        task.setCategories(categories.stream().map(Category::new).collect(Collectors.toList()));
         taskService.create(task);
         return "redirect:/tasks";
     }
@@ -88,9 +88,9 @@ public class TaskController {
     }
 
     @PostMapping("/update")
-    public String updateTask(@ModelAttribute Task task, Model model, @RequestParam(value = "category.id") int[] categories, @SessionAttribute User user) {
+    public String updateTask(@ModelAttribute Task task, Model model, @RequestParam(value = "category.id") List<Integer> categories, @SessionAttribute User user) {
         task.setUser(user);
-            task.setCategories(Arrays.stream(categories).mapToObj(Category::new).collect(Collectors.toList()));
+        task.setCategories(categories.stream().map(Category::new).collect(Collectors.toList()));
         var isUpdate = taskService.update(task, user.getId());
         if (!isUpdate) {
             model.addAttribute("message", String.format("Невозможно обновить задачу. id = %s не существует или принадлежит другому пользователю", task.getId()));

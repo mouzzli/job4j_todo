@@ -11,11 +11,27 @@ import java.util.Optional;
 @Repository
 @AllArgsConstructor
 public class HibernateTaskRepository implements TaskRepository {
-    private static final String SET_DONE = "UPDATE Task SET done = :done WHERE id = :id AND user_id = :userId";
-    private static final String DELETE_BY_ID = "DELETE FROM Task WHERE id = :id AND user_id = :userId";
-    private static final String FIND_DONE = "SELECT DISTINCT t FROM Task t JOIN FETCH t.priority JOIN FETCH t.categories WHERE done = :done AND user_id = :userId ORDER BY t.id";
-    private static final String FIND_ALL = "SELECT DISTINCT t FROM Task t JOIN FETCH t.priority JOIN FETCH t.categories WHERE user_id = :userId ORDER BY t.id";
-    private static final String FIND_BY_ID = "FROM Task t JOIN FETCH t.priority JOIN FETCH t.categories WHERE t.id = :id AND user_id = :userId";
+    private static final String SET_DONE = "UPDATE Task "
+            + "SET done = :done "
+            + "WHERE id = :id AND user_id = :userId";
+    private static final String DELETE_BY_ID = "DELETE FROM Task "
+            + "WHERE id = :id AND user_id = :userId";
+    private static final String FIND_DONE = "SELECT DISTINCT t "
+            + "FROM Task t "
+            + "JOIN FETCH t.priority "
+            + "JOIN FETCH t.categories "
+            + "WHERE done = :done AND user_id = :userId "
+            + "ORDER BY t.id";
+    private static final String FIND_ALL = "SELECT DISTINCT t "
+            + "FROM Task t "
+            + "JOIN FETCH t.priority "
+            + "JOIN FETCH t.categories"
+            + " WHERE user_id = :userId "
+            + "ORDER BY t.id";
+    private static final String FIND_BY_ID = "FROM Task t "
+            + "JOIN FETCH t.priority "
+            + "JOIN FETCH t.categories "
+            + "WHERE t.id = :id AND user_id = :userId";
     private final CrudRepository crudRepository;
 
     @Override
