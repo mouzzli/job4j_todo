@@ -1,15 +1,16 @@
 package ru.job4j.todo.service;
 
 import ru.job4j.todo.model.Task;
+import ru.job4j.todo.model.User;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface TaskService {
 
-    List<Task> findAll(int userId);
+    List<Task> findAll(User user);
 
-    List<Task> findByStatus(boolean status, int userId);
+    List<Task> findByStatus(boolean status, User user);
 
     Task create(Task task);
 

@@ -24,19 +24,19 @@ public class TaskController {
 
     @GetMapping
     public String index(Model model, @SessionAttribute User user) {
-        model.addAttribute("tasks", taskService.findAll(user.getId()));
+        model.addAttribute("tasks", taskService.findAll(user));
         return "task/tasks";
     }
 
     @GetMapping("/completed")
     public String completedTask(Model model, @SessionAttribute User user) {
-        model.addAttribute("tasks", taskService.findByStatus(true, user.getId()));
+        model.addAttribute("tasks", taskService.findByStatus(true, user));
         return "task/completed";
     }
 
     @GetMapping("/new")
     public String newTask(Model model, @SessionAttribute User user) {
-        model.addAttribute("tasks", taskService.findByStatus(false, user.getId()));
+        model.addAttribute("tasks", taskService.findByStatus(false, user));
         return "task/new";
     }
 

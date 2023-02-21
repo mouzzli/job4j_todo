@@ -3,8 +3,10 @@ package ru.job4j.todo.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.job4j.todo.model.Task;
+import ru.job4j.todo.model.User;
 import ru.job4j.todo.repository.TaskRepository;
 
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,8 +16,11 @@ public class SimpleTaskService implements TaskService {
     private final TaskRepository taskRepository;
 
     @Override
-    public List<Task> findAll(int userId) {
-        return taskRepository.findAllOrderByDate(userId);
+    public List<Task> findAll(User user) {
+        List<Task> tasks = taskRepository.findAllOrderByDate(user.getId());
+        tasks.forEach(task -> setTimeZone(task, user));
+        return tasks;
+
     }
 
     @Override
@@ -44,7 +49,23 @@ public class SimpleTaskService implements TaskService {
     }
 
     @Override
-    public List<Task> findByStatus(boolean status, int userId) {
-        return taskRepository.findByStatus(status, userId);
+    public List<Task> findByStatus(boolean status, User user) {
+        List<Task> tasks = taskRepository.findByStatus(status, user.getId());
+        tasks.forEach(task -> setTimeZone(task, user));
+        return tasks;
+    }
+
+    private void setTimeZone(Task task, User user) {
+        ZoneId zoneId;
+        if (user.getUserZone() == null) {
+            zoneId = ZoneId.systemDefault();
+
+        } else {
+            zoneId = ZoneId.of(user.getUserZone());
+        }
+        task.setCreated(task.getCreated()
+                .atZone(ZoneId.systemDefault())
+                .withZoneSameInstant(zoneId)
+                .toLocalDateTime());
     }
 }

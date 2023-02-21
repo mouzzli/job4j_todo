@@ -3,10 +3,7 @@ package ru.job4j.todo.controller;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import ru.job4j.todo.model.User;
 import ru.job4j.todo.service.UserService;
 
@@ -57,5 +54,19 @@ public class UserController {
     public String logout(HttpSession session) {
         session.invalidate();
         return "user/login";
+    }
+
+    @GetMapping("/edit")
+    public String getEditForm(Model model, @SessionAttribute User user) {
+        model.addAttribute("timeZones", userService.getTimeZones());
+        model.addAttribute("user", user);
+        return "user/edit";
+    }
+
+    @PostMapping("/edit")
+    public String edit(@SessionAttribute User user, @RequestParam("userZone") String userZone) {
+        user.setUserZone(userZone);
+        userService.save(user);
+        return "redirect:/tasks";
     }
 }
