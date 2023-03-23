@@ -25,7 +25,7 @@ create database todo;
 ```
 
 Заменить данные подключения к БД.
-Хранятся по пути src/main/resources/hibernate.cfg.xml
+Нвходятся по пути src/main/resources/hibernate.cfg.xml
 ```
  <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
  <property name="hibernate.connection.url">jdbc:postgresql://127.0.0.1:5432/todo</property>
@@ -33,7 +33,7 @@ create database todo;
  <property name="hibernate.connection.password">password</property>
 ```
 
-В Настроках Liquibase данные подключения к БД заменить на свои
+В настройках Liquibase данные подключения к БД заменить на свои
 Хранятся по пути db/liquibase.properties
 ```
 changelogFile: db/dbchangelog.xml
